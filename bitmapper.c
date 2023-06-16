@@ -53,8 +53,15 @@ void error(int errorCode){
 }
 
 int headerInfo(char* filename){
-    // the header should be of the type BITMAPINFOHEADER, as specified on
-    // https://en.wikipedia.org/wiki/BMP_file_format
+    /*
+    * the header should be of the type BITMAPINFOHEADER, as specified on
+    * https://en.wikipedia.org/wiki/BMP_file_format
+    * a "header" is split into two parts: 
+    * - the first 14 bytes are the same for all bitmap formats
+    * - and the following X bytes, where BITMAPINFOHEADER has 40B.
+    * meaning the *entire* header is 14B + 40B = 54B
+    * That's also the part that will be removed.
+    */
 
     FILE* bitmap = fopen(filename, "rb");
     if(bitmap == NULL)
