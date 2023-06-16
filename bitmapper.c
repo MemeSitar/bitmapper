@@ -45,6 +45,11 @@ void error(int errorCode){
         exit(0);
         break;
 
+    case 3:
+        printf("Unsupported file format.\n");
+        exit(0);
+        break;
+
     default:
         printf("Error lol\n");
         exit(0);
@@ -91,7 +96,7 @@ int headerInfo(char* filename){
     // if the file is not "BM" or its' (declared) header is >40B, I won't handle it.
     // 40B is the length of BITMAPINFOHEADER
     if(headerSize != 40 || strcmp(fileType, "BM") != 0)
-        error(0);
+        error(3);
 
     // width
     fseek(bitmap, 0x12, SEEK_SET);
