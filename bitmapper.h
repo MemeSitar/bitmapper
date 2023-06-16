@@ -3,7 +3,7 @@
 
 typedef struct
 {
-    int size;
+    size_t size;
     int width;
     int height;
 } Image;
@@ -17,6 +17,6 @@ typedef enum
 } ErrorEnum;
 
 void error(ErrorEnum errorType);
-int headerInfo(char* filename);
+Image* headerInfo(char* filename);
 
 #endif

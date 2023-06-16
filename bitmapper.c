@@ -55,7 +55,7 @@ void error(ErrorEnum errorType){
     }
 }
 
-int headerInfo(char* filename){
+Image* headerInfo(char* filename){
     /*
     * the header should be of the type BITMAPINFOHEADER, as specified on
     * https://en.wikipedia.org/wiki/BMP_file_format
@@ -71,27 +71,28 @@ int headerInfo(char* filename){
         error(FILE_OPEN_ERR);
     
     // file type
-    char* fileType = malloc(3*sizeof(char));
-    fileType[0] = (char) fgetc(bitmap);
-    fileType[1] = (char) fgetc(bitmap);
-    fileType[2] = '\0';
-    printf("%s\n", fileType);
+    char fileType[3];
+    fgets(fileType, 3, bitmap);
 
     // file size
     fseek(bitmap, 0x02, SEEK_SET);
-    int fileSize = fgetc(bitmap);
+    size_t fileSize = fgetc(bitmap);
     fileSize += (fgetc(bitmap) << 8);
     fileSize += (fgetc(bitmap) << 16);
     fileSize += (fgetc(bitmap) << 24);
-    printf("The image is %d bytes large.\n", fileSize);
 
     // header size
     fseek(bitmap, 0x0E, SEEK_SET);
     int headerSize = 0;
     headerSize = fgetc(bitmap);
-    printf("The header is %d bytes long.\n", headerSize);
 
-    // if the file is not "BM" or its' (declared) header is >40B, I won't handle it.
+    #ifdef __DEBUG__
+    printf("%s\n", fileType);
+    printf("The image is %ld bytes large.\n", fileSize);
+    printf("The header is %d bytes long.\n", headerSize);
+    #endif
+
+    // if the file is not "BM" or its' header is >40B, I won't handle it.
     // 40B is the length of BITMAPINFOHEADER
     if(headerSize != 40 || strcmp(fileType, "BM") != 0)
         error(UNSUPPORTED_FILE_FORMAT);
@@ -101,16 +102,24 @@ int headerInfo(char* filename){
     int width = 0;
     width = fgetc(bitmap);
     width += (fgetc(bitmap) << 8);
-    printf("The bitmap is %d pixels wide.\n", width);
 
     // height
     fseek(bitmap, 0x16, SEEK_SET);
     int height = 0;
     height = fgetc(bitmap);
     height += (fgetc(bitmap) << 8);
+
+    #ifdef __DEBUG__
+    printf("The bitmap is %d pixels wide.\n", width);
     printf("The bitmap is %d pixels tall.\n", height);
-    fseek(bitmap, 0x2, SEEK_CUR);
+    #endif
 
     fclose(bitmap);
-    return 0;
+
+    Image* metadata = malloc(sizeof(Image));
+    metadata->size = fileSize;
+    metadata->height = height;
+    metadata->width = width;
+    
+    return metadata;
 }
