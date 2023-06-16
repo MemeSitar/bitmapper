@@ -5,6 +5,7 @@
 #include "bitmapper.h"
 
 #define SEG printf("%s:%d\n", __FILE__, __LINE__);
+#define __DEBUG__
 
 int main(int argc, char* argv[]){
     
@@ -80,6 +81,7 @@ Image* headerInfo(char* filename){
     fileSize += (fgetc(bitmap) << 8);
     fileSize += (fgetc(bitmap) << 16);
     fileSize += (fgetc(bitmap) << 24);
+    size_t apparentFileSize = filesize(bitmap);
 
     // header size
     fseek(bitmap, 0x0E, SEEK_SET);
@@ -87,10 +89,15 @@ Image* headerInfo(char* filename){
     headerSize = fgetc(bitmap);
 
     #ifdef __DEBUG__
-    printf("%s\n", fileType);
-    printf("The image is %ld bytes large.\n", fileSize);
+    printf("File type: %s\n", fileType);
+    printf("HEADER: The image is %ld bytes large.\n", fileSize);
+    printf("ACTUAL: The image is %ld bytes large.\n", apparentFileSize);
     printf("The header is %d bytes long.\n", headerSize);
     #endif
+
+    // header reporting wrong file size!!!!
+    if(fileSize != apparentFileSize)
+        error(FILE_OPEN_ERR);
 
     // if the file is not "BM" or its' header is >40B, I won't handle it.
     // 40B is the length of BITMAPINFOHEADER
@@ -122,4 +129,13 @@ Image* headerInfo(char* filename){
     metadata->width = width;
     
     return metadata;
+}
+
+size_t filesize(FILE* file){
+    // Gets the actual size of the file (in B).
+    size_t savedPosition = ftell(file);
+    fseek(file, 0, SEEK_END);
+    size_t endPosition = ftell(file);
+    fseek(file, savedPosition, SEEK_SET);
+    return endPosition;
 }

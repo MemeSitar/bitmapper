@@ -18,5 +18,6 @@ typedef enum
 
 void error(ErrorEnum errorType);
 Image* headerInfo(char* filename);
+size_t filesize(FILE* file);
 
 #endif
