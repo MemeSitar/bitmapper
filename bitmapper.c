@@ -23,7 +23,8 @@ int main(int argc, char* argv[]){
     if (strcmp(argv[1], "-hi") == 0){
         if (argc <= 2)
             error(MISSING_ARGUMENTS);
-        headerInfo(argv[2]);
+        Image* metadata = headerInfo(argv[2]);
+        headerPrinter(metadata);
         return 0;
     }
 
@@ -125,6 +126,9 @@ Image* headerInfo(char* filename){
     printf("The bitmap is %d pixels tall.\n", height);
     #endif
 
+    if(height*width*3 != fileSize - 54)
+        error(FILESIZE_ERR);
+
     fclose(bitmap);
 
     Image* metadata = malloc(sizeof(Image));
@@ -143,4 +147,14 @@ size_t filesize(FILE* file){
     size_t endPosition = ftell(file);
     fseek(file, savedPosition, SEEK_SET);
     return endPosition;
+}
+
+void headerPrinter(Image* metadata){
+    //one more sanity check.
+    if(metadata->height*metadata->width*3 != metadata->size - 54)
+        error(FILESIZE_ERR);
+    
+    printf("The image is %ldB large\n", metadata->size);
+    printf("The dimensions are: %dx%d\n", metadata->width, metadata->height);
+    printf("Sanity checks out.\n");
 }
