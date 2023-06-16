@@ -8,3 +8,4 @@ The initial goals for the tool are:
 - adding back the header
 
 ## Notes
+The following command compiles the bitmapper for windows: (it's statically linked) `x86_64-w64-mingw32-g++ bitmapper.c`
