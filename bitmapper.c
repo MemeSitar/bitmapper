@@ -55,7 +55,7 @@ void error(int errorCode){
 int headerInfo(char* filename){
     // the header should be of the type BITMAPINFOHEADER, as specified on
     // https://en.wikipedia.org/wiki/BMP_file_format
-    
+
     FILE* bitmap = fopen(filename, "rb");
     if(bitmap == NULL)
         error(2);
@@ -100,5 +100,7 @@ int headerInfo(char* filename){
     height += (fgetc(bitmap) << 8);
     printf("The bitmap is %d pixels tall.\n", height);
     fseek(bitmap, 0x2, SEEK_CUR);
+
+    fclose(bitmap);
     return 0;
 }
