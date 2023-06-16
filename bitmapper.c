@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SEG printf("%s:%d\n", __FILE__, __LINE__);
+#include "bitmapper.h"
 
-void error(int errorCode);
-int headerInfo(char* filename);
+#define SEG printf("%s:%d\n", __FILE__, __LINE__);
 
 int main(int argc, char* argv[]){
     
@@ -32,20 +31,20 @@ int main(int argc, char* argv[]){
 
 }
 
-void error(int errorCode){
-    switch (errorCode)
+void error(ErrorEnum errorType){
+    switch (errorType)
     {
-    case 1:
+    case MISSING_ARGUMENTS:
         printf("Not enough arguments. Exiting.\n");
         exit(0);
         break;
     
-    case 2:
+    case FILE_OPEN_ERR:
         printf("Couldn't open file.\n");
         exit(0);
         break;
 
-    case 3:
+    case UNSUPPORTED_FILE_FORMAT:
         printf("Unsupported file format.\n");
         exit(0);
         break;
