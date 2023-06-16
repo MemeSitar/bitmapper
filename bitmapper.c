@@ -21,9 +21,8 @@ int main(int argc, char* argv[]){
     }
 
     if (strcmp(argv[1], "-hi") == 0){
-        if (argc <= 2){
-            error(1);
-        }
+        if (argc <= 2)
+            error(MISSING_ARGUMENTS);
         headerInfo(argv[2]);
         return 0;
     }
@@ -69,7 +68,7 @@ int headerInfo(char* filename){
 
     FILE* bitmap = fopen(filename, "rb");
     if(bitmap == NULL)
-        error(2);
+        error(FILE_OPEN_ERR);
     
     // file type
     char* fileType = malloc(3*sizeof(char));
@@ -95,7 +94,7 @@ int headerInfo(char* filename){
     // if the file is not "BM" or its' (declared) header is >40B, I won't handle it.
     // 40B is the length of BITMAPINFOHEADER
     if(headerSize != 40 || strcmp(fileType, "BM") != 0)
-        error(3);
+        error(UNSUPPORTED_FILE_FORMAT);
 
     // width
     fseek(bitmap, 0x12, SEEK_SET);
