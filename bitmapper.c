@@ -5,7 +5,6 @@
 #include "bitmapper.h"
 
 #define SEG printf("%s:%d\n", __FILE__, __LINE__);
-#define __DEBUG__
 
 int main(int argc, char* argv[]){
     
@@ -41,17 +40,22 @@ void error(ErrorEnum errorType){
     
     case FILE_OPEN_ERR:
         printf("Couldn't open file.\n");
-        exit(0);
+        exit(1);
         break;
 
     case UNSUPPORTED_FILE_FORMAT:
         printf("Unsupported file format.\n");
-        exit(0);
+        exit(1);
+        break;
+
+    case FILESIZE_ERR:
+        printf("Filesize sanity check failed: unexpected filesize.\n");
+        exit(1);
         break;
 
     default:
         printf("Error lol\n");
-        exit(0);
+        exit(1);
         break;
     }
 }
@@ -97,7 +101,7 @@ Image* headerInfo(char* filename){
 
     // header reporting wrong file size!!!!
     if(fileSize != apparentFileSize)
-        error(FILE_OPEN_ERR);
+        error(FILESIZE_ERR);
 
     // if the file is not "BM" or its' header is >40B, I won't handle it.
     // 40B is the length of BITMAPINFOHEADER
@@ -133,6 +137,7 @@ Image* headerInfo(char* filename){
 
 size_t filesize(FILE* file){
     // Gets the actual size of the file (in B).
+    // TODO maybe use fstat() in the future?
     size_t savedPosition = ftell(file);
     fseek(file, 0, SEEK_END);
     size_t endPosition = ftell(file);

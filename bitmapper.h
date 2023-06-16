@@ -13,6 +13,7 @@ typedef enum
     MISSING_ARGUMENTS,
     FILE_OPEN_ERR,
     UNSUPPORTED_FILE_FORMAT,
+    FILESIZE_ERR,
     GENERAL_ERROR
 } ErrorEnum;
 
