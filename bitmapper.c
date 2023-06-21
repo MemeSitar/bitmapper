@@ -10,22 +10,49 @@ int main(int argc, char* argv[]){
     
     // initial check
     if (argc <= 1 || strcmp(argv[1], "-h") == 0){
-        printf("%s\n%s\n%s\n%s\n%s\n%s\n",
+        printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
             "Not enough arguments, baka!!",
-            "The following switches are possible: (do note, the switches must be directly after the program!)",
+            "The following switches are possible:",
             "-h for help (prints this)",
             "-hi [file] for header info",
-            "-s [file] to strip the file's header",
-            "-a [original, file] to add original's header to");
+            "-s [file, (out)] to strip the file's header",
+            "-a [original, file] to add original's header to",
+            "NOTE: the switches must be directly after the program!",
+            "NOTE: filenames may NOT be larger than 100 characters.");
         return 0;
     }
 
+    // arglength check
+    for(int i = 0; i < argc; i++){
+        if(strlen(argv[i]) > 100)
+            error(GENERAL_ERROR);
+    }
+
+    // headerinfo
     if (strcmp(argv[1], "-hi") == 0){
         if (argc <= 2)
             error(MISSING_ARGUMENTS);
         Image* metadata = headerInfo(argv[2]);
         headerPrinter(metadata);
         return 0;
+    }
+
+    //strip
+    if (strcmp(argv[1], "-s") == 0){
+        if (argc <= 2)
+            error(MISSING_ARGUMENTS);
+        // soft error.
+        if (argc > 4)
+            error(TOO_MANY_ARGS);
+        
+        // pretty much just to check the file checks out.
+        Image* metadata = headerInfo(argv[2]);
+
+        if (argc == 3){
+
+        } else {
+
+        }
     }
 
 
@@ -54,6 +81,12 @@ void error(ErrorEnum errorType){
         exit(1);
         break;
 
+    case TOO_MANY_ARGS:
+        printf("Too many arguments were provided, some were ignored.\n");
+        return;
+        break;
+
+    case GENERAL_ERROR:
     default:
         printf("Error lol\n");
         exit(1);
@@ -157,4 +190,8 @@ void headerPrinter(Image* metadata){
     printf("The image is %ldB large\n", metadata->size);
     printf("The dimensions are: %dx%d\n", metadata->width, metadata->height);
     printf("Sanity checks out.\n");
+}
+
+void headerStripper(Image* metadata, char* inputName, char* outputName){
+
 }
