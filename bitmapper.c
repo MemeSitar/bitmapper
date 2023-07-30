@@ -10,13 +10,13 @@ int main(int argc, char* argv[]){
     
     // initial check
     if (argc <= 1 || strcmp(argv[1], "-h") == 0){
-        printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n",
+        printf("%s\n\n%s\n%s\n%s\n%s\n%s\n\n%s\n%s\n\n",
             "Not enough arguments, baka!!",
             "The following switches are possible:",
             "-h for help (prints this)",
             "-hi [file] for header info",
             "-s [file, (out)] to strip the file's header",
-            "-a [original, file] to add original's header to",
+            "-a [original, file] to add original's header to file",
             "NOTE: the switches must be directly after the program!",
             "NOTE: filenames may NOT be larger than 100 characters.");
         return 0;
