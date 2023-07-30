@@ -41,6 +41,7 @@ int main(int argc, char* argv[]){
     if (strcmp(argv[1], "-s") == 0){
         if (argc <= 2)
             error(MISSING_ARGUMENTS);
+
         // soft error.
         if (argc > 4)
             error(TOO_MANY_ARGS);
@@ -48,10 +49,12 @@ int main(int argc, char* argv[]){
         // pretty much just to check the file checks out.
         Image* metadata = headerInfo(argv[2]);
 
-        if (argc == 3){
+        if (argc == 3){ // three arguments, only the input file
+            // need to append to input file string .stripped
 
-        } else {
-
+        } else  if (argc == 4) { // four arguments, also the output file
+            // use output file name.
+            
         }
     }
 
