@@ -1,0 +1,1 @@
+gcc -Werror -Wall --pedantic -std=c99 -Wextra bitmapper.c error.c
